@@ -1,0 +1,391 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+  
+    #editor { 
+        position: absolute;
+        top: 7%;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+  
+a {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #141414; 
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: absolute;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+   top: 1%;    
+   right: 0;
+        bottom: 0;
+        left: 0;
+    background-color: #303030;
+  color: white;
+    background-color: #141414; 
+  color: white; 
+}
+</style>
+<body style="background: #141414;">
+  <iframe style="position:fixed; top:0; bottom:0; left:10%; width:90%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;" src="frame.html"></iframe>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<button id="newFile" style="background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAEbmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSfvu78nIGlkPSdXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQnPz4KPHg6eG1wbWV0YSB4bWxuczp4PSdhZG9iZTpuczptZXRhLyc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyc+CgogPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9JycKICB4bWxuczpBdHRyaWI9J2h0dHA6Ly9ucy5hdHRyaWJ1dGlvbi5jb20vYWRzLzEuMC8nPgogIDxBdHRyaWI6QWRzPgogICA8cmRmOlNlcT4KICAgIDxyZGY6bGkgcmRmOnBhcnNlVHlwZT0nUmVzb3VyY2UnPgogICAgIDxBdHRyaWI6Q3JlYXRlZD4yMDIzLTAxLTAxPC9BdHRyaWI6Q3JlYXRlZD4KICAgICA8QXR0cmliOkV4dElkPjkzNDZkMDc2LWVjOWUtNGI4YS05NWMzLTY0YzViNjc0NWJhMTwvQXR0cmliOkV4dElkPgogICAgIDxBdHRyaWI6RmJJZD41MjUyNjU5MTQxNzk1ODA8L0F0dHJpYjpGYklkPgogICAgIDxBdHRyaWI6VG91Y2hUeXBlPjI8L0F0dHJpYjpUb3VjaFR5cGU+CiAgICA8L3JkZjpsaT4KICAgPC9yZGY6U2VxPgogIDwvQXR0cmliOkFkcz4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24gcmRmOmFib3V0PScnCiAgeG1sbnM6ZGM9J2h0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvJz4KICA8ZGM6dGl0bGU+CiAgIDxyZGY6QWx0PgogICAgPHJkZjpsaSB4bWw6bGFuZz0neC1kZWZhdWx0Jz5hZGQtZmlsZS1pY29uIC0gMTwvcmRmOmxpPgogICA8L3JkZjpBbHQ+CiAgPC9kYzp0aXRsZT4KIDwvcmRmOkRlc2NyaXB0aW9uPgoKIDxyZGY6RGVzY3JpcHRpb24g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'); filter: invert(100%);
+background-size: 50px 50px; width: 50px; height: 50px; border: none;"></button>
+<div id="buttons"></div>
+<script>
+  document.querySelector('iframe').onload = function() {
+    // Mode autoguess begin
+     window.frameWindow = document.querySelector("iframe").contentWindow;
+window.require = frameWindow.require;
+window.define = frameWindow.define;
+window.editor = document.querySelector("iframe").contentWindow.editor;
+
+    
+define("ace/ext/modelist",["require","exports","module"], function(require, exports, module) {
+"use strict";
+
+var modes = [];
+function getModeForPath(path) {
+    var mode = modesByName.text;
+    var fileName = path.split(/[\/\\]/).pop();
+    for (var i = 0; i < modes.length; i++) {
+        if (modes[i].supportsFile(fileName)) {
+            mode = modes[i];
+            break;
+        }
+    }
+    return mode;
+}
+
+var Mode = function(name, caption, extensions) {
+    this.name = name;
+    this.caption = caption;
+    this.mode = "ace/mode/" + name;
+    this.extensions = extensions;
+    var re;
+    if (/\^/.test(extensions)) {
+        re = extensions.replace(/\|(\^)?/g, function(a, b){
+            return "$|" + (b ? "^" : "^.*\\.");
+        }) + "$";
+    } else {
+        re = "^.*\\.(" + extensions + ")$";
+    }
+
+    this.extRe = new RegExp(re, "gi");
+};
+
+Mode.prototype.supportsFile = function(filename) {
+    return filename.match(this.extRe);
+};
+var supportedModes = {
+    ABAP:        ["abap"],
+    ABC:         ["abc"],
+    ActionScript:["as"],
+    ADA:         ["ada|adb"],
+    Alda:        ["alda"],
+    Apache_Conf: ["^htaccess|^htgroups|^htpasswd|^conf|htaccess|htgroups|htpasswd"],
+    Apex:        ["apex|cls|trigger|tgr"],
+    AQL:         ["aql"],
+    AsciiDoc:    ["asciidoc|adoc"],
+    ASL:         ["dsl|asl|asl.json"],
+    Assembly_x86:["asm|a"],
+    AutoHotKey:  ["ahk"],
+    BatchFile:   ["bat|cmd"],
+    C_Cpp:       ["cpp|c|cc|cxx|h|hh|hpp|ino"],
+    C9Search:    ["c9search_results"],
+    Cirru:       ["cirru|cr"],
+    Clojure:     ["clj|cljs"],
+    Cobol:       ["CBL|COB"],
+    coffee:      ["coffee|cf|cson|^Cakefile"],
+    ColdFusion:  ["cfm"],
+    Crystal:     ["cr"],
+    CSharp:      ["cs"],
+    Csound_Document: ["csd"],
+    Csound_Orchestra: ["orc"],
+    Csound_Score: ["sco"],
+    CSS:         ["css"],
+    Curly:       ["curly"],
+    D:           ["d|di"],
+    Dart:        ["dart"],
+    Diff:        ["diff|patch"],
+    Dockerfile:  ["^Dockerfile"],
+    Dot:         ["dot"],
+    Drools:      ["drl"],
+    Edifact:     ["edi"],
+    Eiffel:      ["e|ge"],
+    EJS:         ["ejs"],
+    Elixir:      ["ex|exs"],
+    Elm:         ["elm"],
+    Erlang:      ["erl|hrl"],
+    Forth:       ["frt|fs|ldr|fth|4th"],
+    Fortran:     ["f|f90"],
+    FSharp:      ["fsi|fs|ml|mli|fsx|fsscript"],
+    FSL:         ["fsl"],
+    FTL:         ["ftl"],
+    Gcode:       ["gcode"],
+    Gherkin:     ["feature"],
+    Gitignore:   ["^.gitignore"],
+    Glsl:        ["glsl|frag|vert"],
+    Gobstones:   ["gbs"],
+    golang:      ["go"],
+    GraphQLSchema: ["gql"],
+    Groovy:      ["groovy"],
+    HAML:        ["haml"],
+    Handlebars:  ["hbs|handlebars|tpl|mustache"],
+    Haskell:     ["hs"],
+    Haskell_Cabal: ["cabal"],
+    haXe:        ["hx"],
+    Hjson:       ["hjson"],
+    HTML:        ["html|htm|xhtml|vue|we|wpy"],
+    HTML_Elixir: ["eex|html.eex"],
+    HTML_Ruby:   ["erb|rhtml|html.erb"],
+    INI:         ["ini|conf|cfg|prefs"],
+    Io:          ["io"],
+    Jack:        ["jack"],
+    Jade:        ["jade|pug"],
+    Java:        ["java"],
+    JavaScript:  ["js|jsm|jsx"],
+    JSON:        ["json"],
+    JSON5:       ["json5"],
+    JSONiq:      ["jq"],
+    JSP:         ["jsp"],
+    JSSM:        ["jssm|jssm_state"],
+    JSX:         ["jsx"],
+    Julia:       ["jl"],
+    Kotlin:      ["kt|kts"],
+    LaTeX:       ["tex|latex|ltx|bib"],
+    Latte:       ["latte"],
+    LESS:        ["less"],
+    Liquid:      ["liquid"],
+    Lisp:        ["lisp"],
+    LiveScript:  ["ls"],
+    LogiQL:      ["logic|lql"],
+    LSL:         ["lsl"],
+    Lua:         ["lua"],
+    LuaPage:     ["lp"],
+    Lucene:      ["lucene"],
+    Makefile:    ["^Makefile|^GNUmakefile|^makefile|^OCamlMakefile|make"],
+    Markdown:    ["md|markdown"],
+    Mask:        ["mask"],
+    MATLAB:      ["matlab"],
+    Maze:        ["mz"],
+    MediaWiki:   ["wiki|mediawiki"],
+    MEL:         ["mel"],
+    MIPS:        ["s|asm"],
+    MIXAL:       ["mixal"],
+    MUSHCode:    ["mc|mush"],
+    MySQL:       ["mysql"],
+    Nginx:       ["nginx|conf"],
+    Nim:         ["nim"],
+    Nix:         ["nix"],
+    NSIS:        ["nsi|nsh"],
+    Nunjucks:    ["nunjucks|nunjs|nj|njk"],
+    ObjectiveC:  ["m|mm"],
+    OCaml:       ["ml|mli"],
+    Pascal:      ["pas|p"],
+    Perl:        ["pl|pm"],
+    pgSQL:       ["pgsql"],
+    PHP:         ["php|inc|phtml|shtml|php3|php4|php5|phps|phpt|aw|ctp|module"],
+    PHP_Laravel_blade: ["blade.php"],
+    Pig:         ["pig"],
+    Powershell:  ["ps1"],
+    Praat:       ["praat|praatscript|psc|proc"],
+    Prisma:      ["prisma"],
+    Prolog:      ["plg|prolog"],
+    Properties:  ["properties"],
+    Protobuf:    ["proto"],
+    Puppet:      ["epp|pp"],
+    Python:      ["py"],
+    QML:         ["qml"],
+    R:           ["r"],
+    Raku:        ["raku|rakumod|rakutest|p6|pl6|pm6"],
+    Razor:       ["cshtml|asp"],
+    RDoc:        ["Rd"],
+    Red:         ["red|reds"],
+    RHTML:       ["Rhtml"],
+    RST:         ["rst"],
+    Ruby:        ["rb|ru|gemspec|rake|^Guardfile|^Rakefile|^Gemfile"],
+    Rust:        ["rs"],
+    SASS:        ["sass"],
+    SCAD:        ["scad"],
+    Scala:       ["scala|sbt"],
+    Scheme:      ["scm|sm|rkt|oak|scheme"],
+    Scrypt:      ["scrypt"],
+    SCSS:        ["scss"],
+    SH:          ["sh|bash|^.bashrc"],
+    SJS:         ["sjs"],
+    Slim:        ["slim|skim"],
+    Smarty:      ["smarty|tpl"],
+    Smithy:      ["smithy"],
+    snippets:    ["snippets"],
+    Soy_Template:["soy"],
+    Space:       ["space"],
+    SQL:         ["sql"],
+    SQLServer:   ["sqlserver"],
+    Stylus:      ["styl|stylus"],
+    SVG:         ["svg"],
+    Swift:       ["swift"],
+    Tcl:         ["tcl"],
+    Terraform:   ["tf", "tfvars", "terragrunt"],
+    Tex:         ["tex"],
+    Text:        ["txt"],
+    Textile:     ["textile"],
+    Toml:        ["toml"],
+    TSX:         ["tsx"],
+    Twig:        ["twig|swig"],
+    Typescript:  ["ts|typescript|str"],
+    Vala:        ["vala"],
+    VBScript:    ["vbs|vb"],
+    Velocity:    ["vm"],
+    Verilog:     ["v|vh|sv|svh"],
+    VHDL:        ["vhd|vhdl"],
+    Visualforce: ["vfp|component|page"],
+    Wollok:      ["wlk|wpgm|wtest"],
+    XML:         ["xml|rdf|rss|wsdl|xslt|atom|mathml|mml|xul|xbl|xaml"],
+    XQuery:      ["xq"],
+    YAML:        ["yaml|yml"],
+    Zeek:        ["zeek|bro"],
+    Django:      ["html"]
+};
+
+var nameOverrides = {
+    ObjectiveC: "Objective-C",
+    CSharp: "C#",
+    golang: "Go",
+    C_Cpp: "C and C++",
+    Csound_Document: "Csound Document",
+    Csound_Orchestra: "Csound",
+    Csound_Score: "Csound Score",
+    coffee: "CoffeeScript",
+    HTML_Ruby: "HTML (Ruby)",
+    HTML_Elixir: "HTML (Elixir)",
+    FTL: "FreeMarker",
+    PHP_Laravel_blade: "PHP (Blade Template)",
+    Perl6: "Perl 6",
+    AutoHotKey: "AutoHotkey / AutoIt"
+};
+
+var modesByName = {};
+for (var name in supportedModes) {
+    var data = supportedModes[name];
+    var displayName = (nameOverrides[name] || name).replace(/_/g, " ");
+    var filename = name.toLowerCase();
+    var mode = new Mode(filename, displayName, data[0]);
+    modesByName[filename] = mode;
+    modes.push(mode);
+}
+
+module.exports = {
+    getModeForPath: getModeForPath,
+    modes: modes,
+    modesByName: modesByName
+};
+
+});                (function() {
+                    window.require(["ace/ext/modelist"], function(m) {
+                        if (typeof module == "object" && typeof exports == "object" && module) {
+                            module.exports = m;
+                        }
+                    });
+                })();
+  // Mode autoguess end
+
+    var ace = document.querySelector("iframe").contentWindow.ace;
+
+  
+                function getModeByFileExtension(path){
+    var modelist = ace.require("ace/ext/modelist");
+    return modelist.getModeForPath(path).mode;
+}
+  
+async function api(api, body) {
+    var request = await fetch('/api/' + api, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+    });
+    return request.json();
+}
+
+async function init() {
+    var request = await fetch('/api/init', {
+        method: "POST"
+    });
+    return request.json();
+}
+
+(async () => {
+    window.fs = await init();
+    window.updateFS = async function() {
+        var fileList = await api("fetchFiles", {
+            rancode: fs.fs
+        })
+
+        fileList.forEach(function(fileName) {
+            var file = document.createElement("a");
+          file.style="background-color: #141414; color: white;";
+            file.innerText = fileName
+            file.id = fileName.replaceAll(".", "_");
+            file.onclick = async function() {
+                window.currentFile = fileName;
+                frameWindow.currentFile = fileName;
+                var c = await api("getFile", {
+                    fileName: fileName,
+                    rancode: fs.fs
+                });
+                editor.setValue(c.content);
+                var filename = currentFile;
+                var mode = getModeByFileExtension(filename);
+                window.language = mode.split("/").pop();
+                frameWindow.language = language;
+                editor.getSession().setMode(mode);
+            }
+            if (!document.getElementById(fileName.replaceAll(".", "_"))) {
+                               document.querySelector("#buttons").appendChild(document.createElement("br"));
+ document.querySelector("#buttons").appendChild(file);
+            }
+        });
+    };
+    await api("writeFile", {
+        rancode: fs.fs,
+        fileName: "index.js",
+        content: "console.log(\"Hello World!\");"
+    });
+    await updateFS();
+    document.body.onbeforeunload = async function(){
+    await api("exit", {
+      rancode: fs.fs
+    })
+  }
+    document.querySelector("#index_js").click();
+    var newFileButton = document.getElementById("newFile");
+    newFileButton.onclick = async function() {
+        var fn = prompt("File name:");
+        if (fn !== null) {
+            await api("writeFile", {
+                rancode: fs.fs,
+                fileName: fn,
+                content: ""
+            });
+            await updateFS();
+        }
+    }
+
+    editor.commands.on('afterExec', async function() {
+        await api("writeFile", {
+            rancode: fs.fs,
+            fileName: window.currentFile,
+            content: editor.getValue()
+        });
+    });
+})(); 
+  }
+</script>
+</body>

@@ -1,0 +1,69 @@
+
+
+<meta name="theme-color" content="#000000">
+
+<body style="background-color: black;">
+  
+<script src="repl.min.js"></script>
+<div id="result" style="position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999; color: white;">
+  <code id="stuf">
+  Running
+  </code><code id="running-text">
+  </code>
+  <div>
+    
+  </div>
+    <div id="space">
+    ‏‏‎
+  </div>
+  </div>
+  <script>
+    var dots = window.setInterval( function() {
+    var wait = document.getElementById("running-text");
+    if ( wait.innerHTML.length > 2 ) 
+        wait.innerHTML = "";
+    else 
+        wait.innerHTML+= ".";
+    }, 300);
+    
+    document.onkeydown=function(e){
+      e.preventDefault();
+    }
+  document.body.contentEditable=true;
+    console.log=function(stuff){
+var elem=document.createElement('code');
+elem.innerText=stuff;
+      document.querySelector('#result').appendChild(elem);
+      document.querySelector('#result').appendChild(document.createElement('div'));
+      
+    }
+    
+    var repljs=new REPLjs();
+  var txt=document.getElementById('running-text');
+      var thing1=document.getElementById('space');
+          var thing2=document.getElementById('stuf');
+
+
+   repljs.setCode(decodeURIComponent(new URLSearchParams(location.search).get('code')));
+
+   repljs.setFileName(new URLSearchParams(location.search).get('filename'));
+ 
+    repljs.setLanguage(new URLSearchParams(location.search).get('lang'));
+
+ repljs.onCallback=function(output){
+          var wait = document.getElementById("result");
+      clearInterval(dots);
+
+          thing1.remove();
+    thing2.remove();
+      txt.innerHTML="";
+      
+var resElement=document.createElement('code');
+  resElement.innerText=output;
+  document.querySelector('#result').appendChild(resElement);
+}
+    
+repljs.run();
+  
+  </script>
+  </body>
